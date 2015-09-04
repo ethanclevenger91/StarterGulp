@@ -176,7 +176,7 @@ gulp.task('browser-sync', function () {
 		//server: {
 			//baseDir: './'
 		//},
-		proxy: '[your-site-here]', // Proxy for local dev sites
+		proxy: 'http://replaceme.com', // Proxy for local dev sites
 		// port: 5555, // Sets the port in which to serve the site
 		// open: false // Stops BS from opening a new browser window
 	});
