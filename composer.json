@@ -3,6 +3,7 @@
     "description": "Gulp goodies",
     "homepage": "http://webspecdesign.com",
     "license": "MIT",
+    "type":"library",
     "require": {
         "composer/installers": "~1.0"
     },
