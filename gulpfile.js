@@ -21,22 +21,12 @@ var runSequence = require('run-sequence');
 var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
 
-// Define our paths
-var paths = {
-	scripts: 'js/**/*.js',
-	styles: 'sass/**/*.scss',
-	fonts: 'sass/fonts/**/*',
-	images: 'img/**/*.{png,jpg,jpeg,gif,svg}',
-	bowerDir: './bower_components'
-};
+var config = require('../../config.json');
 
-var destPaths = {
-	scripts: 'build/js',
-	styles: 'build/css',
-	fonts: 'build/fonts',
-	images: 'build/img',
-	html: 'build/validated'
-};
+// Define our paths
+var paths = config.paths;
+
+var destPaths = config.destPaths;
 
 // Error Handling
 // Send error to notification center with gulp-notify
@@ -55,7 +45,7 @@ gulp.task('update-bower', function() {
 
 //Make any bower-installed css files scss to prevent extra requests
 gulp.task('css-to-scss', function() {
-	return bowerFiles('**/*.css').map(function(file) {
+	return bowerFiles('**/*.css', {paths: {bowerDirectory: paths.bowerDir, bowerJson: paths.bowerJson}}).map(function(file) {
 		gulp.src(file)
 			.pipe(rename(function(path) {
 				path.basename = '_'+path.basename;
@@ -72,7 +62,7 @@ gulp.task('styles', function() {
 		.pipe(plumber())
 		.pipe(sass({
 			errLogToConsole:true,
-			includePaths: bowerFiles('**/*.{scss,sass,css}').map(function(file) {
+			includePaths: bowerFiles('**/*.{scss,sass,css}', {paths: {bowerDirectory: paths.bowerDir, bowerJson: paths.bowerJson}}).map(function(file) {
 				return path.dirname(file);
 			})
 		}))
@@ -88,7 +78,7 @@ gulp.task('build-styles', function() {
 		.pipe(plumber())
 		.pipe(sass({
 			errLogToConsole:true,
-			includePaths:bowerFiles('**/*.{scss,sass,css}').map(function(file) {
+			includePaths:bowerFiles('**/*.{scss,sass,css}', {paths: {bowerDirectory: paths.bowerDir, bowerJson: paths.bowerJson}}).map(function(file) {
 				return path.dirname(file);
 			})
 		}))
@@ -102,11 +92,15 @@ gulp.task('build-styles', function() {
 // Lint, minify, and concat our JS
 gulp.task('scripts', function() {
 	return gulp.src(bowerFiles(
-			['**/*.js', '!**/jquery.js'], 
+			['**/*.js', '!**/jquery.js'],
 			{
-				includeSelf:true
+				includeSelf:true,
+				paths: {
+					bowerDirectory: paths.bowerDir,
+					bowerJson: paths.bowerJson
+				}
 			}
-		), {base: 'bower_components'})
+		), {base: paths.bowerDir})
 		.pipe(plumber())
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
@@ -117,11 +111,15 @@ gulp.task('scripts', function() {
 
 gulp.task('build-scripts', function() {
 	return gulp.src(bowerFiles(
-			['**/*.js', '!**/jquery.js'], 
+			['**/*.js', '!**/jquery.js'],
 			{
-				includeSelf:true
+				includeSelf:true,
+				paths: {
+					bowerDirectory: paths.bowerDir,
+					bowerJson: paths.bowerJson
+				}
 			}
-		), {base: 'bower_components'})
+		), {base: paths.bowerDir})
 		.pipe(plumber())
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
@@ -176,14 +174,14 @@ gulp.task('browser-sync', function () {
 		//server: {
 			//baseDir: './'
 		//},
-		proxy: 'http://replaceme.com', // Proxy for local dev sites
+		proxy: config.bsProxy, // Proxy for local dev sites
 		// port: 5555, // Sets the port in which to serve the site
 		// open: false // Stops BS from opening a new browser window
 	});
 });
 
 gulp.task('clean', function(cb) {
-	del(['build']).then(cb());
+	del([destPaths.build]).then(cb());
 });
 
 gulp.task('clear-cache', function() {
@@ -192,11 +190,15 @@ gulp.task('clear-cache', function() {
 
 gulp.task('move-fonts', function() {
 	return gulp.src(bowerFiles(
-			['**/*.eot', '**/*.woff', '**/*.woff2', '**/*.svg', '**/*.ttf'], 
+			['**/*.eot', '**/*.woff', '**/*.woff2', '**/*.svg', '**/*.ttf'],
 			{
-				includeSelf:true
+				includeSelf:true,
+				paths: {
+					bowerDirectory: paths.bowerDir,
+					bowerJson: paths.bowerJson
+				}
 			}
-		), {base: 'bower_components'})
+		), {base: paths.bowerDir})
 	.pipe(flatten())
 	.pipe(gulp.dest(destPaths.fonts));
 });
