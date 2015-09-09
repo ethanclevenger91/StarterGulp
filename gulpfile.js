@@ -164,11 +164,11 @@ gulp.task('watch', function() {
 // Additional Settings: http://www.browsersync.io/docs/options/
 gulp.task('browser-sync', function () {
 	var files = [
-		'**/*.html',
-		'**/*.php',
-		'build/css/main.css',
-		'build/js/main.js',
-		'build/img/**/*.{png,jpg,jpeg,gif,svg}'
+		paths.root+'/**/*.html',
+		paths.root+'/**/*.php',
+		destPaths.styles+'/main.css',
+		destPaths.scripts+'/main.js',
+		destPaths.images+'/**/*.{png,jpg,jpeg,gif,svg}'
 	];
 	browserSync.init(files, {
 		//server: {
