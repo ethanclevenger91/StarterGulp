@@ -190,7 +190,7 @@ gulp.task('clear-cache', function() {
 
 gulp.task('move-fonts', function() {
 	return gulp.src(bowerFiles(
-			['**/*.eot', '**/*.woff', '**/*.woff2', '**/*.svg', '**/*.ttf'],
+			['**/*.eot', '**/*.woff', '**/*.woff2', '**/*.svg', '**/*.ttf', '**/*.otf'],
 			{
 				includeSelf:true,
 				paths: {
