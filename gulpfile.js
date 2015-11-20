@@ -13,7 +13,7 @@ var flatten = require('gulp-flatten');
 var imagemin = require('gulp-imagemin');
 var jshint = require('gulp-jshint');
 var minifyCSS = require('gulp-minify-css');
-var notify = require('gulp-notify'); // requires Growl on Windows
+var notifications = require('gulp-notify'); // requires Growl on Windows
 var path = require('path');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
@@ -27,6 +27,16 @@ var config = require('../../config.json');
 var paths = config.paths;
 
 var destPaths = config.destPaths;
+
+//Custom notification function
+var notify = function(message) {
+	if(config.disableNotifications) {
+		return plumber();
+	}
+	else {
+		return notifications(message);
+	}
+}
 
 // Error Handling
 // Send error to notification center with gulp-notify
