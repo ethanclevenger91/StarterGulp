@@ -1,5 +1,6 @@
 {
   "name": "webspec-gulp-starter",
+  "version": "1.0.2",
   "main": [
   	"package.json",
   	"gulpfile.js"
