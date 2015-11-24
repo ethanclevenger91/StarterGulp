@@ -1,3 +1,10 @@
 {
-  "name": "webspec-gulp-starter"
+  "name": "webspec-gulp-starter",
+  "main": [
+  	"package.json",
+  	"gulpfile.js"
+  ],
+  "ignore": [
+
+  ]
 }
