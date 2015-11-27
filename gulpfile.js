@@ -41,7 +41,7 @@ var notify = function(message) {
 // Error Handling
 // Send error to notification center with gulp-notify
 var handleErrors = function() {
-	notify.onError({
+	notifications.onError({
 		title: "Compile Error",
 		message: "<%= error.message %>"
 	}).apply(this, arguments);
