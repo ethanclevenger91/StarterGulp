@@ -89,7 +89,7 @@ gulp.task('build-styles', function() {
 // Lint, minify, and concat our JS
 gulp.task('scripts', function() {
 	return gulp.src(bowerFiles(
-			['**/*.js', '!**/jquery.js'],
+			['**/*.js', '!**/jquery.js', '!**/gulpfile.js'],
 			{
 				includeSelf:true,
 				paths: {
@@ -108,7 +108,7 @@ gulp.task('scripts', function() {
 
 gulp.task('build-scripts', function() {
 	return gulp.src(bowerFiles(
-			['**/*.js', '!**/jquery.js'],
+			['**/*.js', '!**/jquery.js', '!**/gulpfile.js'],
 			{
 				includeSelf:true,
 				paths: {
