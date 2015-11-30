@@ -41,7 +41,7 @@ var notify = function(message) {
 // Error Handling
 // Send error to notification center with gulp-notify
 var handleErrors = function() {
-	notify.onError({
+	notifications.onError({
 		title: "Compile Error",
 		message: "<%= error.message %>"
 	}).apply(this, arguments);
@@ -89,7 +89,7 @@ gulp.task('build-styles', function() {
 // Lint, minify, and concat our JS
 gulp.task('scripts', function() {
 	return gulp.src(bowerFiles(
-			['**/*.js', '!**/jquery.js'],
+			['**/*.js', '!**/jquery.js', '!**/gulpfile.js'],
 			{
 				includeSelf:true,
 				paths: {
@@ -108,7 +108,7 @@ gulp.task('scripts', function() {
 
 gulp.task('build-scripts', function() {
 	return gulp.src(bowerFiles(
-			['**/*.js', '!**/jquery.js'],
+			['**/*.js', '!**/jquery.js', '!**/gulpfile.js'],
 			{
 				includeSelf:true,
 				paths: {
