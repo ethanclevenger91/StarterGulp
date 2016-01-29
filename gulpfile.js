@@ -53,6 +53,19 @@ gulp.task('update-bower', function() {
 		.pipe(gulp.dest(paths.bowerDir));
 });
 
+//Make any bower-installed css files scss to prevent extra requests
+gulp.task('css-to-scss', function() {
+	return bowerFiles('**/*.css', {paths: {bowerDirectory: paths.bowerDir, bowerJson: paths.bowerJson}}).map(function(file) {
+		gulp.src(file)
+			.pipe(rename(function(path) {
+				path.basename = '_'+path.basename;
+				path.basename = path.basename.replace('.min', '');
+				path.extname = '.scss';
+			}))
+			.pipe(gulp.dest(path.dirname(file)));
+	});
+});
+
 // Compile our Sass
 gulp.task('styles', function() {
 	return gulp.src(paths.styles)
@@ -202,7 +215,7 @@ gulp.task('move-fonts', function() {
 
 // Default Task
 gulp.task('default', function(cb) {
-	runSequence('clean', 'clear-cache', 'images', 'scripts', 'styles', 'move-fonts', 'browser-sync', 'watch', cb);
+	runSequence('css-to-scss', 'clean', 'clear-cache', 'images', 'scripts', 'styles', 'move-fonts', 'browser-sync', 'watch', cb);
 });
 
 // Bower Task
@@ -212,5 +225,5 @@ gulp.task('bower', function(cb) {
 
 // Build Task
 gulp.task('build', function(cb) {
-	runSequence('clean', 'clear-cache', 'build-images', 'build-scripts', 'build-styles', 'move-fonts', cb);
+	runSequence('css-to-scss', 'clean', 'clear-cache', 'build-images', 'build-scripts', 'build-styles', 'move-fonts', cb);
 });
