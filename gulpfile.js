@@ -16,6 +16,7 @@ var minifyCSS = require('gulp-minify-css');
 var notifications = require('gulp-notify'); // requires Growl on Windows
 var path = require('path');
 var plumber = require('gulp-plumber');
+var fs = require('fs');
 var rename = require('gulp-rename');
 var runSequence = require('run-sequence');
 var sass = require('gulp-sass');
@@ -53,21 +54,36 @@ gulp.task('update-bower', function() {
 		.pipe(gulp.dest(paths.bowerDir));
 });
 
-//Make any bower-installed css files scss to prevent extra requests
 gulp.task('css-to-scss', function() {
 	return bowerFiles('**/*.css', {paths: {bowerDirectory: paths.bowerDir, bowerJson: paths.bowerJson}}).map(function(file) {
-		gulp.src(file)
-			.pipe(rename(function(path) {
-				path.basename = '_'+path.basename;
-				path.basename = path.basename.replace('.min', '');
-				path.extname = '.scss';
-			}))
-			.pipe(gulp.dest(path.dirname(file)));
+		var pieces = file.split("\\");
+		var fileName = pieces.pop();
+		fileName = fileName.replace('.min', '');
+		var scssFileName = fileName.replace('.css', '.scss');
+		var underscoreTest = pieces.join('\\')+'\\_'+scssFileName;
+		var scssTest = pieces.join('\\')+'\\'+scssFileName;
+		try {
+			uStats = fs.lstatSync(underscoreTest);
+		}
+		catch(e) {
+			try {
+				sStats = fs.lstatSync(scssTest);
+			}
+			catch(e) {
+				gulp.src(file)
+					.pipe(rename(function(path) {
+						path.basename = '_'+path.basename;
+						path.basename = path.basename.replace('.min', '');
+						path.extname = '.scss';
+					}))
+					.pipe(gulp.dest(path.dirname(file)));
+			}
+		}
 	});
 });
 
 // Compile our Sass
-gulp.task('styles', function() {
+gulp.task('styles', ['css-to-scss'], function() {
 	return gulp.src(paths.styles)
 		.pipe(plumber())
 		.pipe(sass({
@@ -83,7 +99,7 @@ gulp.task('styles', function() {
 });
 
 // Compile our Sass
-gulp.task('build-styles', function() {
+gulp.task('build-styles', ['css-to-scss'], function() {
 	return gulp.src(paths.styles)
 		.pipe(plumber())
 		.pipe(sass({
@@ -215,7 +231,7 @@ gulp.task('move-fonts', function() {
 
 // Default Task
 gulp.task('default', function(cb) {
-	runSequence('css-to-scss', 'clean', 'clear-cache', 'images', 'scripts', 'styles', 'move-fonts', 'browser-sync', 'watch', cb);
+	runSequence('clean', 'clear-cache', 'images', 'scripts', 'styles', 'move-fonts', 'browser-sync', 'watch', cb);
 });
 
 // Bower Task
@@ -225,5 +241,5 @@ gulp.task('bower', function(cb) {
 
 // Build Task
 gulp.task('build', function(cb) {
-	runSequence('css-to-scss', 'clean', 'clear-cache', 'build-images', 'build-scripts', 'build-styles', 'move-fonts', cb);
+	runSequence('clean', 'clear-cache', 'build-images', 'build-scripts', 'css-to-scss', 'build-styles', 'move-fonts', cb);
 });
