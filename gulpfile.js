@@ -241,5 +241,5 @@ gulp.task('bower', function(cb) {
 
 // Build Task
 gulp.task('build', function(cb) {
-	runSequence('clean', 'clear-cache', 'build-images', 'build-scripts', 'css-to-scss', 'build-styles', 'move-fonts', cb);
+	runSequence('clean', 'clear-cache', 'build-images', 'build-scripts', 'build-styles', 'move-fonts', cb);
 });
