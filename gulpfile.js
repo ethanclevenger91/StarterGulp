@@ -128,7 +128,9 @@ gulp.task('scripts', function() {
 			}
 		), {base: paths.bowerDir})
 		.pipe(plumber())
-		.pipe(jshint())
+		.pipe(jshint({
+			asi:true
+		}))
 		.pipe(jshint.reporter('default'))
 		.pipe(concat('main.js'))
 		.pipe(gulp.dest(destPaths.scripts))
@@ -147,7 +149,9 @@ gulp.task('build-scripts', function() {
 			}
 		), {base: paths.bowerDir})
 		.pipe(plumber())
-		.pipe(jshint())
+		.pipe(jshint({
+			asi:true
+		}))
 		.pipe(jshint.reporter('default'))
 		.pipe(uglify())
 		.pipe(concat('main.js'))
